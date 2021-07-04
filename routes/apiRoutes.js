@@ -1,105 +1,33 @@
 
 const router = require("express").Router();
-const fs = require("fs");
+const store = require("../db/log");
 
-
-// ROUTING
-
-router.get("/notes", function(req, res) {
-
-    // Use fs.readFile to access data in db.json
-    fs.readFile("./db/db.json", "utf8", function(err, data) {
-        
-        // Throw error code of there was issue reading db.json
-        if (err) throw err;
-
-        // Pass parsed data from db.json as response to be rendered in index.js 
-        res.json(JSON.parse(data));
-
-    });
-
+// GET "/api/notes" responds with all notes from the database
+router.get("/notes", function (req, res) {
+  store
+    //call getNotes
+    .getNotes()
+    //then array that came back, res.json is sending back the object
+    .then(notes => res.json(notes))
+    //if it hits an error sends it to the front end 
+    .catch(err => res.status(500).json(err));
 });
 
-
-// API POST Request
-
-router.post("/notes", function(req, res) {
-
-    // Use fs.readFile to access data in db.json
-    fs.readFile("./db/db.json", "utf8", function(err, data) {
-
-        // Throw error code of there was issue reading db.json
-        if (err) throw err;
-
-        // Parse and store db.json data to raw
-        let raw = JSON.parse(data);
-
-        // Push user's new note content to raw
-        raw.push(req.body);
-
-        // Use fs.writeFile to write raw array data to db.json  
-        fs.writeFile("./db/db.json", JSON.stringify(raw), function(err) {
-
-            // Throw error code of there was issue writing to db.json
-            if(err) return err;
-
-            // log "write success" to console/terminal
-            console.log("write success");
-
-        });
-
-    });
-
-    // End response process
-    res.end();
-
+router.post("/notes", (req, res) => {
+  store
+    .addNote(req.body)
+    .then((note) => res.json(note))
+    //if it hits an error sends it to the front end 
+    .catch(err => res.status(500).json(err));
 });
 
-// // API DELETE Request
-
-// router.delete("/api/notes/:id", function(req, res) {
-
-//     // Store id of user-selected note for deletion 
-//     let id = req.params.id;
-
-//     // Use fs.readFile to access data in db.json
-//     fs.readFile("./db/db.json", "utf8", function(err, data) {
-
-//         // Throw error code of there was issue reading db.json
-//         if (err) throw err;
-
-//         // Parse and store db.json data to raw
-//         let raw = JSON.parse(data);
-
-//         // Loop through the entirity of raw
-//         for (let i = 0; i < raw.length; i++) {
-
-//             // See if the user selected id matches any of the id's in raw
-//             if (id == raw[i].id) {
-
-//                 // If the id's match, splice the indexed note out of raw 
-//                 raw.splice(i,1);
-
-//                 // Use fs.writeFile to write raw array data to db.json  
-//                 fs.writeFile("./db/db.json", JSON.stringify(raw), function(err) {
-
-//                     // Throw error code of there was issue reading db.json
-//                     if (err) throw err;
-
-//                     // log "note deleted" to console/terminal
-//                     console.log("note deleted");
-
-//                 });
-
-//             };
-
-//         };
-
-//     });
-    
-//     // End response process
-//     res.end(); 
-
-// });
+//deletes the note with an id equal to req.params.id
+router.delete("/notes/:id", function (req, res) {
+  store
+    .removeNote(req.params.id)
+    .then(() => res.json({ ok: true }))
+    //if it hits an error sends it to the front end 
+    .catch(err => res.status(500).json(err));
+});
 
 module.exports = router;
