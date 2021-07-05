@@ -20,12 +20,6 @@ https://cryptic-sea-80259.herokuapp.com/
 
     The application can be ran through heroku via this link: https://cryptic-sea-80259.herokuapp.com/
     
-    If you would like run this application locally use:
-    npm install
-    npm express
-    
-    Use http://localhost:3001
-
    ## Usage
 
     Easily create, save and delete task using Note Taker       
