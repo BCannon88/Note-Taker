@@ -18,6 +18,7 @@ https://cryptic-sea-80259.herokuapp.com/
        
    ## Installation
 
+<<<<<<< HEAD
     The application can be ran through heroku via this link: https://cryptic-sea-80259.herokuapp.com/       
 
      If you would like run this application locally use:

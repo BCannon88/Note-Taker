@@ -2,16 +2,18 @@
 const router = require("express").Router();
 const store = require("../db/log");
 
+
 // Get Route
 router.get("/notes", function (req, res) {
   store
     
     .getNotes()
-   
+
     .then(notes => res.json(notes))
     
     .catch(err => res.status(500).json(err));
 });
+
 // Post Route
 router.post("/notes", (req, res) => {
   store
@@ -21,7 +23,9 @@ router.post("/notes", (req, res) => {
     .catch(err => res.status(500).json(err));
 });
 
+
 //Deletes Notes
+
 router.delete("/notes/:id", function (req, res) {
   store
     .removeNote(req.params.id)
